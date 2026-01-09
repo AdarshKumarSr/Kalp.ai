@@ -2,9 +2,9 @@ import Navbar from "../components/layout/Navbar";
 import Footer from "../components/layout/Footer";
 
 import Hero from "../components/home/Hero";
-import Philosophy from "../components/Home/Philosophy";
-import Editorial from "../components/Home/Editorial";
-import Architecture from "../components/Home/Architecture";
+import Philosophy from "../components/home/Philosophy";
+import Editorial from "../components/home/Editorial";
+import Architecture from "../components/home/Architecture";
 
 export default function Home() {
   return (
