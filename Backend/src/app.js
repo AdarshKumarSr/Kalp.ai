@@ -2,7 +2,7 @@ import express from "express";
 import cors from "cors";
 import authRoutes from "./routes/auth.routes.js";
 import researchRoutes from "./routes/research.routes.js";
-import inquiryRoutes from "./routes/inquiry.js"; // 👈 ADD THIS
+import inquiryRoutes from "./routes/inquiry.js";  
 
 const app = express();
 
@@ -11,6 +11,10 @@ app.use(express.json());
 
 app.use("/api/auth", authRoutes);
 app.use("/api/research", researchRoutes);
-app.use("/api/inquiry", inquiryRoutes); // 👈 ADD THIS
+app.use("/api/inquiry", inquiryRoutes);  
+app.get("/health", (req, res) => {
+  res.json({ status: "ok", uptime: process.uptime() });
+});
+
 
 export default app;
