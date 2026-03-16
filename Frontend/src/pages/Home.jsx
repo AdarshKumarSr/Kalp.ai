@@ -8,7 +8,8 @@ import Architecture from "../components/home/Architecture";
 
 export default function Home() {
   return (
-    <div className="bg-noise">
+    // 🔧 FIX: bg-app ensures dark/light background is applied FIRST
+    <div className="bg-app bg-noise min-h-screen">
       <div className="content-layer flex flex-col min-h-screen">
         <Navbar />
         <Hero />

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
 
 import { useAuth } from "./auth/AuthContext";
@@ -9,6 +9,7 @@ import TopLoader from "./components/TopLoader";
 import RouteLoader from "./components/RouteLoader";
 
 import IntroVideo from "./components/IntroVideo";
+import CustomCursor from "./components/CustomCursor";
 
 import Home from "./pages/Home";
 import Login from "./pages/Login";
@@ -17,16 +18,12 @@ import Research from "./pages/Research";
 import About from "./pages/About";
 import VerifyOtp from "./pages/VerifyOtp";
 
-/* =========================
-   Routes
-========================= */
 function AppRoutes() {
   const { loading: authLoading } = useAuth();
 
-  // 🔒 Wait for auth to resolve
   if (authLoading) {
     return (
-      <div className="h-screen flex items-center justify-center text-text-muted">
+      <div className="h-screen flex items-center justify-center">
         Loading…
       </div>
     );
@@ -34,17 +31,12 @@ function AppRoutes() {
 
   return (
     <Routes>
-      {/* 🌍 Default */}
       <Route path="/" element={<Navigate to="/home" replace />} />
-
-      {/* 🌍 Public routes */}
       <Route path="/home" element={<Home />} />
       <Route path="/about" element={<About />} />
       <Route path="/login" element={<Login />} />
       <Route path="/signup" element={<Signup />} />
       <Route path="/verify-otp" element={<VerifyOtp />} />
-
-      {/* 🔒 Protected */}
       <Route
         path="/research"
         element={
@@ -57,35 +49,15 @@ function AppRoutes() {
   );
 }
 
-/* =========================
-   Main App
-========================= */
 export default function App() {
-  const [showIntro, setShowIntro] = useState(
-    !localStorage.getItem("introPlayed")
-  );
-
-  const { loading } = useLoader(); // 🌍 GLOBAL loader
+  const { loading } = useLoader();
 
   return (
     <>
-      {/* 🔝 Top Progress Loader */}
+      <CustomCursor />
       {loading && <TopLoader />}
-
-      {/* 🔄 Route change loader */}
       <RouteLoader />
-
-      {/* 🎬 Intro Video */}
-      {showIntro ? (
-        <IntroVideo
-          onFinish={() => {
-            localStorage.setItem("introPlayed", "true");
-            setShowIntro(false);
-          }}
-        />
-      ) : (
-        <AppRoutes />
-      )}
+      <AppRoutes />
     </>
   );
 }

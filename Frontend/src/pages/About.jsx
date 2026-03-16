@@ -22,9 +22,7 @@ export default function Profile() {
 
   /* ===== Logout ===== */
   const handleLogout = () => {
-    setDeleteTarget({
-      type: "logout",
-    });
+    setDeleteTarget({ type: "logout" });
   };
 
   /* ===== Fetch Research ===== */
@@ -64,36 +62,34 @@ export default function Profile() {
   };
 
   /* ===== Research Actions ===== */
-  const ResearchActions = ({ item }) => {
-    return (
-      <div className="flex gap-2">
-        <button
-          onClick={() => setEditing(item)}
-          className="text-xs px-3 py-1 rounded-full border bg-white hover:bg-stone-50 transition"
-        >
-          Edit
-        </button>
+  const ResearchActions = ({ item }) => (
+    <div className="flex gap-2">
+      <button
+        onClick={() => setEditing(item)}
+        className="text-xs px-3 py-1 rounded-full border border-app bg-card hover:bg-muted transition"
+      >
+        Edit
+      </button>
 
-        <button
-          onClick={() =>
-            setDeleteTarget({
-              type: "research",
-              item,
-            })
-          }
-          className="text-xs px-3 py-1 rounded-full border border-red-200 text-red-600 hover:bg-red-50 transition"
-        >
-          Delete
-        </button>
-      </div>
-    );
-  };
+      <button
+        onClick={() =>
+          setDeleteTarget({
+            type: "research",
+            item,
+          })
+        }
+        className="text-xs px-3 py-1 rounded-full border border-red-500/30 text-red-500 hover:bg-red-500/10 transition"
+      >
+        Delete
+      </button>
+    </div>
+  );
 
   return (
     <>
       <Navbar />
 
-      <section className="px-6 py-20">
+      <section className="px-6 py-20 bg-app text-main">
         <div className="max-w-5xl mx-auto flex flex-col gap-16">
 
           {/* ===== Profile Header ===== */}
@@ -102,10 +98,10 @@ export default function Profile() {
               <img
                 src={user.avatar.image}
                 alt={user.avatar.name}
-                className="w-20 h-20 rounded-full object-cover border"
+                className="w-20 h-20 rounded-full object-cover border border-app"
               />
             ) : (
-              <div className="w-20 h-20 rounded-full bg-gray-200 flex items-center justify-center text-xl font-bold">
+              <div className="w-20 h-20 rounded-full bg-muted flex items-center justify-center text-xl font-bold">
                 {user?.name?.[0] || "U"}
               </div>
             )}
@@ -114,7 +110,7 @@ export default function Profile() {
               <h1 className="text-4xl font-serif italic">
                 Welcome {user?.name} 👋
               </h1>
-              <p className="text-text-muted max-w-lg">
+              <p className="text-muted max-w-lg">
                 Manage your personal information, account security, and
                 published research.
               </p>
@@ -122,42 +118,33 @@ export default function Profile() {
           </div>
 
           {/* ===== Personal Info ===== */}
-          <div className="bg-white border rounded-2xl p-8 flex flex-col gap-6">
+          <div className="bg-card border border-app rounded-2xl p-8 flex flex-col gap-6">
             <h2 className="text-2xl font-serif italic">
               Personal Information
             </h2>
 
             <div className="grid md:grid-cols-2 gap-6 text-sm">
-              <div>
-                <p className="text-text-muted">Full Name</p>
-                <p className="font-medium">{user?.name}</p>
-              </div>
-
-              <div>
-                <p className="text-text-muted">Role</p>
-                <p className="font-medium capitalize">
-                  {user?.role?.toLowerCase()}
-                </p>
-              </div>
-
-              <div>
-                <p className="text-text-muted">Email</p>
-                <p className="font-medium">{user?.email}</p>
-              </div>
-
-              <div>
-                <p className="text-text-muted">Expertise</p>
-                <p className="font-medium">
-                  {Array.isArray(user?.expertise)
+              {[
+                ["Full Name", user?.name],
+                ["Role", user?.role?.toLowerCase()],
+                ["Email", user?.email],
+                [
+                  "Expertise",
+                  Array.isArray(user?.expertise)
                     ? user.expertise.join(", ")
-                    : user?.expertise || "—"}
-                </p>
-              </div>
+                    : user?.expertise || "—",
+                ],
+              ].map(([label, value]) => (
+                <div key={label}>
+                  <p className="text-muted">{label}</p>
+                  <p className="font-medium capitalize">{value}</p>
+                </div>
+              ))}
             </div>
           </div>
 
           {/* ===== Account & Security ===== */}
-          <div className="bg-white border rounded-2xl p-8 flex flex-col gap-6">
+          <div className="bg-card border border-app rounded-2xl p-8 flex flex-col gap-6">
             <h2 className="text-2xl font-serif italic">
               Account & Security
             </h2>
@@ -165,14 +152,14 @@ export default function Profile() {
             <div className="flex flex-col sm:flex-row gap-4">
               <button
                 onClick={() => setShowChangePassword(true)}
-                className="h-11 px-6 rounded-full border font-medium hover:bg-stone-50 transition"
+                className="h-11 px-6 rounded-full border border-app font-medium hover:bg-muted transition"
               >
                 Change Password
               </button>
 
               <button
                 onClick={handleLogout}
-                className="h-11 px-6 rounded-full border border-red-200 text-red-600 hover:bg-red-50 transition"
+                className="h-11 px-6 rounded-full border border-red-500/30 text-red-500 hover:bg-red-500/10 transition"
               >
                 Logout your Account
               </button>
@@ -186,9 +173,9 @@ export default function Profile() {
             </h2>
 
             {loading ? (
-              <p className="text-text-muted">Loading research…</p>
+              <p className="text-muted">Loading research…</p>
             ) : research.length === 0 ? (
-              <p className="text-text-muted">
+              <p className="text-muted">
                 You haven’t published any research yet.
               </p>
             ) : (
@@ -206,7 +193,7 @@ export default function Profile() {
         </div>
       </section>
 
-      {/* ===== Edit Research Modal ===== */}
+      {/* ===== Modals ===== */}
       {editing && (
         <PublishResearchModal
           initialData={editing}
@@ -215,14 +202,12 @@ export default function Profile() {
         />
       )}
 
-      {/* ===== Change Password Modal ===== */}
       {showChangePassword && (
         <ChangePasswordModal
           onClose={() => setShowChangePassword(false)}
         />
       )}
 
-      {/* ===== Confirm Delete / Logout Modal ===== */}
       {deleteTarget && (
         <ConfirmDeleteModal
           title={

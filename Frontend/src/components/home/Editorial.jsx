@@ -35,18 +35,18 @@ export default function Editorial() {
   return (
     <>
       {/* 📰 Editorial Section */}
-      <section className="w-full px-6 py-20">
+      <section className="w-full px-6 py-20 bg-app text-main">
         <div className="max-w-6xl mx-auto flex flex-col gap-12">
 
-          {/* Header */}
-          <div className="flex items-center justify-between border-b border-[#e6e6db] pb-6">
+          {/* ===== Header ===== */}
+          <div className="flex items-center justify-between border-b border-app pb-6">
             <h2 className="text-4xl font-serif italic">
               Editorial Discovery
             </h2>
 
             <a
               href="/research"
-              className="text-sm font-medium flex items-center gap-1 hover:text-text-muted"
+              className="text-sm font-medium flex items-center gap-1 hover:text-muted transition"
             >
               View Journal
               <span className="material-symbols-outlined text-sm">
@@ -55,7 +55,7 @@ export default function Editorial() {
             </a>
           </div>
 
-          {/* Cards */}
+          {/* ===== Cards ===== */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {items.map((item, index) => (
               <article
@@ -64,7 +64,7 @@ export default function Editorial() {
                 className="flex flex-col gap-4 group cursor-pointer"
               >
                 {/* Image */}
-                <div className="relative w-full h-56 rounded-2xl overflow-hidden bg-stone-100">
+                <div className="relative w-full h-56 rounded-2xl overflow-hidden bg-muted">
                   <img
                     src={images[index]}
                     alt={item.title}
@@ -75,9 +75,9 @@ export default function Editorial() {
 
                 {/* Meta */}
                 <div className="flex flex-col gap-2">
-                  <div className="flex items-center gap-2 text-xs text-text-muted font-medium">
+                  <div className="flex items-center gap-2 text-xs text-muted font-medium">
                     <span>{item.domain}</span>
-                    <span className="size-1 rounded-full bg-stone-300" />
+                    <span className="size-1 rounded-full bg-muted" />
                     <span>
                       {new Date(item.createdAt).toLocaleDateString()}
                     </span>
@@ -87,7 +87,7 @@ export default function Editorial() {
                     {item.title}
                   </h3>
 
-                  <p className="text-sm text-text-muted line-clamp-2">
+                  <p className="text-sm text-muted line-clamp-2">
                     {item.abstract}
                   </p>
                 </div>

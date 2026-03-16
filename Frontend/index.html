@@ -2,13 +2,18 @@
 <html lang="en" class="light">
   <head>
     <meta charset="UTF-8" />
+
+    <!-- Mobile browser UI color (controlled dynamically) -->
+    <meta name="theme-color" content="#f8f8f5" />
+
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Kalp Lab</title>
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-     <link rel="icon" type="image/png" href="/kalp.png" />
+    <link rel="icon" type="image/png" href="/kalp.png" />
+
     <link
       href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Spline+Sans:wght@300;400;500;600;700&display=swap"
       rel="stylesheet"
@@ -18,10 +23,10 @@
       rel="stylesheet"
     />
 
-    <!-- Tailwind CDN -->
+    <!-- Tailwind CDN (UNCHANGED) -->
     <script src="https://cdn.tailwindcss.com?plugins=forms"></script>
 
-    <!-- Tailwind Theme Config (INLINE) -->
+    <!-- Inline Tailwind config (UNCHANGED) -->
     <script>
       tailwind.config = {
         darkMode: "class",
@@ -49,9 +54,46 @@
         },
       };
     </script>
+
+    <!-- ✅ FIX: sync browser chrome + html background -->
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        const LIGHT = "#f8f8f5";
+        const DARK = "#23220f";
+
+        const meta =
+          document.querySelector('meta[name="theme-color"]') ||
+          (() => {
+            const m = document.createElement("meta");
+            m.name = "theme-color";
+            document.head.appendChild(m);
+            return m;
+          })();
+
+        const update = () => {
+          const isDark = document.documentElement.classList.contains("dark");
+          meta.setAttribute("content", isDark ? DARK : LIGHT);
+
+          // 🔑 THIS fixes the white area above navbar
+          document.documentElement.style.backgroundColor = isDark
+            ? DARK
+            : LIGHT;
+        };
+
+        // Initial sync
+        update();
+
+        // Observe html class ONLY (body is unreliable early)
+        new MutationObserver(update).observe(document.documentElement, {
+          attributes: true,
+          attributeFilter: ["class"],
+        });
+      });
+    </script>
   </head>
 
-  <body class="bg-background-light text-text-main font-display antialiased overflow-x-hidden">
+  <body class="font-display antialiased overflow-x-hidden">
+
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
   </body>

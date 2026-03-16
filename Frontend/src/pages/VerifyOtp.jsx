@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../auth/AuthContext";
+import { useTheme } from "../context/ThemeContext";
 
 export default function VerifyOtp() {
   const [otp, setOtp] = useState("");
@@ -10,11 +11,20 @@ export default function VerifyOtp() {
   const { state } = useLocation();
   const navigate = useNavigate();
   const { verifyOtp, requestOtp } = useAuth();
+  const { dark } = useTheme();
 
   const email = state?.email;
-  const redirectTo = state?.from || "/home"; // ✅ IMPORTANT
+  const redirectTo = state?.from || "/home";
 
-  // ⏳ Cooldown timer
+  const bg       = dark ? "#0f0f0f" : "#f8f8f5";
+  const cardBg   = dark ? "#141414" : "#ffffff";
+  const border   = dark ? "#262626" : "#e5e7eb";
+  const textMain = dark ? "#f5f5f5" : "#111111";
+  const textMuted= dark ? "#a3a3a3" : "#6b7280";
+  const inputBg  = dark ? "#1a1a1a" : "#fafaf7";
+  const btnBg    = dark ? "#f5f5f5" : "#111111";
+  const btnText  = dark ? "#111111" : "#ffffff";
+
   useEffect(() => {
     if (cooldown <= 0) return;
     const timer = setTimeout(() => setCooldown((c) => c - 1), 1000);
@@ -23,24 +33,22 @@ export default function VerifyOtp() {
 
   if (!email) {
     return (
-      <p className="text-center mt-20 text-text-muted">
-        Invalid request
-      </p>
+      <section className="min-h-screen flex items-center justify-center" style={{ backgroundColor: bg }}>
+        <p className="text-center" style={{ color: textMuted }}>Invalid request</p>
+      </section>
     );
   }
 
-  // ✅ VERIFY OTP
   const handleVerify = async () => {
     setError("");
     try {
       await verifyOtp({ email, otp });
-      navigate(redirectTo, { replace: true }); // ✅ FIX
+      navigate(redirectTo, { replace: true });
     } catch {
       setError("Invalid or expired OTP");
     }
   };
 
-  // 🔁 RESEND OTP
   const handleResend = async () => {
     setError("");
     try {
@@ -52,51 +60,54 @@ export default function VerifyOtp() {
   };
 
   return (
-    <section className="min-h-screen flex items-center justify-center px-6">
-      <div className="w-full max-w-md bg-white rounded-3xl border p-10 text-center space-y-6">
-
-        <h2 className="text-3xl font-serif italic">
+    <section
+      className="min-h-screen flex items-center justify-center px-6"
+      style={{ backgroundColor: bg }}
+    >
+      <div
+        className="w-full max-w-md rounded-3xl p-10 text-center space-y-6"
+        style={{ backgroundColor: cardBg, border: `1px solid ${border}` }}
+      >
+        <h2 className="text-3xl font-serif italic" style={{ color: textMain }}>
           Verify OTP
         </h2>
 
-        <p className="text-sm text-text-muted">
-          Enter the 6-digit code sent to <b>{email}</b>
+        <p className="text-sm" style={{ color: textMuted }}>
+          Enter the 6-digit code sent to{" "}
+          <b style={{ color: textMain }}>{email}</b>
         </p>
 
-        {error && (
-          <p className="text-red-500 text-sm">{error}</p>
-        )}
+        {error && <p className="text-red-500 text-sm">{error}</p>}
 
         <input
           value={otp}
           onChange={(e) => setOtp(e.target.value)}
           placeholder="Enter OTP"
           maxLength={6}
-          className="w-full h-12 px-6 rounded-full border text-center tracking-widest"
+          className="w-full h-12 px-6 rounded-full text-center tracking-widest focus:outline-none transition placeholder:opacity-40"
+          style={{
+            backgroundColor: inputBg,
+            border: `1px solid ${border}`,
+            color: textMain,
+          }}
         />
 
         <button
           onClick={handleVerify}
-          className="w-full h-12 rounded-full bg-text-main text-white font-semibold"
+          className="w-full h-12 rounded-full font-semibold transition"
+          style={{ backgroundColor: btnBg, color: btnText }}
         >
           Verify & Login
         </button>
 
-        {/* 🔁 Resend */}
         <button
           onClick={handleResend}
           disabled={cooldown > 0}
-          className={`text-sm underline ${
-            cooldown > 0
-              ? "text-gray-400 cursor-not-allowed"
-              : "text-text-muted"
-          }`}
+          className="text-sm underline transition disabled:cursor-not-allowed disabled:opacity-40"
+          style={{ color: textMuted }}
         >
-          {cooldown > 0
-            ? `Resend OTP in ${cooldown}s`
-            : "Resend OTP"}
+          {cooldown > 0 ? `Resend OTP in ${cooldown}s` : "Resend OTP"}
         </button>
-
       </div>
     </section>
   );
